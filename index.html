@@ -4,7 +4,22 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- icon onglet -->
+    <link rel="icon" href="icon.png">
+    <link rel="apple-touch-icon" href="icon.png">
+    <meta name="theme-color" content="#FFFFFF"/>
     <title>Convertisseur de recette</title>
+    <meta name="description" content="Une application facile à utiliser pour calculer facilement les quantitées d'ingrédients d'une recette.">
+
+    <link rel="manifest" href="manifest.json">
+    <script>
+        // PWA service worker
+		if ("serviceWorker" in navigator) {
+			window.addEventListener("load", () => {
+				navigator.serviceWorker && navigator.serviceWorker.register("./sw.js");
+			});
+		}
+	</script>
     <style>
         body {
             font-family: Arial, Helvetica, sans-serif;
@@ -38,6 +53,7 @@
         }
         table {
             border-spacing: 0px;
+            width: 100%;
         }
         *{
             transition: 0.2s;
@@ -45,6 +61,14 @@
         tr:hover{
             background-color: rgba(204, 204, 204, 0.5);
             border-color: transparent;
+        }
+
+        td{
+            width: auto;
+        }
+        td > *{
+            padding: 0px;
+            margin: 0px;
         }
         /* stylise les titres h*/
         h1 {
@@ -103,7 +127,7 @@
 
 <body>
     <!-- Page pour creer dynaliquement et remplir un tableau de proportionalité pour convertir une recette-->
-    <div>
+    <div style="overflow-x:auto;">
         <h1>Conversion de recette</h1>
         <table id="recette">
             <thead>

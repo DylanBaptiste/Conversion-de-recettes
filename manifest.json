@@ -1,0 +1,22 @@
+{
+    "short_name": "Convertisseur",
+    "name": "Convertisseur de recettes",
+    "theme_color": "#eb5252",
+    "background_color": "#000000",
+    "display": "fullscreen",
+    "Scope": "/",
+    "start_url": "index.html",
+    "icons": [
+      {
+        "src": "icon.png",
+        "type": "image/png",
+        "sizes": "144x144",
+        "purpose": "any maskable"
+      },
+      {
+        "src": "icon.png",
+        "type": "image/png",
+        "sizes": "72x72 96x96 128x128 256x256 512x512"
+      }
+    ]
+  }

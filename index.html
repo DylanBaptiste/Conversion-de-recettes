@@ -171,12 +171,12 @@
             text-align: center;
         }
 
-        .inpercent{
-            width: 40px;
+        .inpercent, b{
+            width: 60px;
             height: 40px;
             line-height: 40px;
             font-size: 20px;
-            border-radius: 50%;
+            border-radius: 10%;
             vertical-align: center;
             text-align: center;
             font-weight: 900;
@@ -219,6 +219,7 @@
         <div>
             <span>Coéficient de proportionalité : <b id="coef"></b></span>
         </div>
+        
     </div>
     <div id="percentblock">
         <!-- calculer le % d'une valeur -->
@@ -228,10 +229,17 @@
                 <!--<button onclick="calculerpercent()">Calculer</button>--><input class="inpercent" type="number" pattern="\d*" id="percent" placeholder="", value="50"> % de <input  class="inpercent" pattern="\d*" type="number" id="valeur" placeholder="", value="1"> = <b id="resultat"></b>
             </span>
             
-            
-            
         </div>
     </div>
+
+    <div>
+        <!-- calculer quel est le taux entre deux valeurs -->
+        <h1>Calculer le % entre deux valeurs</h1>
+        <div>
+            <span>
+                <input class="inpercent" type="number" pattern="\d*" id="nb1" placeholder="", value="1"> représente <b id="resultat1"></b>% de <input  class="inpercent" pattern="\d*" type="number" id="nb2" placeholder="", value="100">
+            </span>
+        </div>
     <script>
         let coef = 1; // coeficient de proportionnalité
 
@@ -294,7 +302,7 @@
             const valeur = document.getElementById("valeur").value;
             console.log(percent, valeur)
             const resultat = (percent / 100) * valeur;
-            document.getElementById("resultat").innerHTML = resultat;
+            document.getElementById("resultat").innerHTML = resultat.toFixed(2);;
         }
         document.getElementById("percent").addEventListener("change", calculerpercent);
         document.getElementById("percent").oninput = calculerpercent;
@@ -302,6 +310,23 @@
         document.getElementById("valeur").addEventListener("change", calculerpercent);
         document.getElementById("valeur").oninput = calculerpercent;
         calculerpercent()
+    </script>
+
+    <script>
+        // fonction qui calcule le % entre deux valeurs
+        function calculerpercent1(){
+            const nb1 = document.getElementById("nb1").value;
+            const nb2 = document.getElementById("nb2").value;
+            console.log(nb1, nb2)
+            const resultat1 = (nb1 / nb2) * 100;
+            document.getElementById("resultat1").innerHTML = resultat1.toFixed(2);
+        }
+        document.getElementById("nb1").addEventListener("change", calculerpercent1);
+        document.getElementById("nb1").oninput = calculerpercent1;
+
+        document.getElementById("nb2").addEventListener("change", calculerpercent1);
+        document.getElementById("nb2").oninput = calculerpercent1;
+        calculerpercent1()
     </script>
 
 

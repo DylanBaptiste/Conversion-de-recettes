@@ -23,21 +23,26 @@
     <style>
         body {
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 14px;
+            font-size: 16px;
         }
         /* centre tout les element de la page */
         body > div > * 
         {
-            margin: 10px auto;
-            width: 90%;
-            padding: 10px;
-            max-width: 500px;
+            margin: 0px auto;
+            width: 100%;
+            padding: 10px 0;
+            font-size: 16px;
+        }
+        input[type="text"] {
+            font-size: inherit;
         }
         body > div {
             border: 3px solid black;
             max-width: 800px;
-            margin : 10px auto;
+            margin : 0px auto;
+            padding: 10px;
             border-radius: 10px;
+            margin-bottom: 20px;
         }
         /* stylise l'entete de la table*/
         thead tr{
@@ -53,8 +58,29 @@
         }
         table {
             border-spacing: 0px;
+            table-layout: fixed;
             width: 100%;
         }
+        table tbody tr{
+            height:  30px;
+            min-height: 30px;
+        }
+        table tbody tr td{
+            width: 100%;
+            height:  30px;
+            min-height: 30px;
+            padding: 0;
+            margin: 0;
+            padding-left: 2px;
+
+        }
+        table tbody tr td *{
+            width: 100%;
+            height:  25px;
+            min-height: 25px;
+            font-size: 18px;
+        }
+        
         *{
             transition: 0.2s;
         }
@@ -73,17 +99,13 @@
         /* stylise les titres h*/
         h1 {
             text-align: center;
-            font-size: 2rem;
+            font-size: 22px !important;
         }
         button{
 
             display: inline-block;
             outline: 0;
             cursor: pointer;
-            padding: 5px 16px;
-            font-size: 14px;
-            font-weight: 500;
-            line-height: 20px;
             vertical-align: middle;
             border: 1px solid;
             border-radius: 6px;
@@ -92,7 +114,9 @@
             border-color: #1b1f2326;
             box-shadow: rgba(27, 31, 35, 0.04) 0px 1px 0px 0px, rgba(255, 255, 255, 0.25) 0px 1px 0px 0px inset;
             transition: 0.2s cubic-bezier(0.3, 0, 0.5, 1);
-            transition-property: color, background-color, border-color;        
+            transition-property: color, background-color, border-color;      
+            /*center text vericaly*/
+
         }
         button:hover {
             background-color: #2c974b;
@@ -102,26 +126,61 @@
         .btn.rouge {
             background-color: #d80c0c;
             color: #fff;
+            display: table-cell;
+            vertical-align: middle;
         }
         .btn.rouge:hover {
             background-color: #830e0e;
             border-color: #1b1f2326;
             transition-duration: 0.1s;
+            
         }
         /* centrer le button ajouter */
         #ajouter{
             display: block;
             margin: 0 auto;
             width: 50%;
+            height: 60px;
+            font-size: 20px;
+        }
+        input{
+            margin: 0;
+            padding: 0;
+            border:0;
+            outline: 1px solid #ccc;
+            background-color: #d8d4d4;
+        }
+        input[type="number"] {
+            
+            -webkit-appearance: none !important;;
+            -moz-appearance: textfield !important;
+            
+            
+        }
+        input:focus {
+            outline: 1px solid black;
+            background-color: rgb(199, 199, 199);
         }
 
-        #percentblock input[type="number"] {
-            width:50px;
-            -webkit-appearance: none;
-            -moz-appearance: textfield;
+        tr td:nth-last-child(1),
+        tr th:nth-last-child(1){
+            width: 25px !important;
+        }
+        table * {
+            /* centrer le texte */
+            text-align: center;
         }
 
-        
+        .inpercent{
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            font-size: 20px;
+            border-radius: 50%;
+            vertical-align: center;
+            text-align: center;
+            font-weight: 900;
+        }
     </style>
 </head>
 
@@ -129,7 +188,7 @@
     <!-- Page pour creer dynaliquement et remplir un tableau de proportionalité pour convertir une recette-->
     <div style="overflow-x:auto;">
         <h1>Conversion de recette</h1>
-        <table id="recette">
+        <table id="recette" width="100%" cellspacing='0' cellpadding='0'>
             <thead>
                 <tr>
                     <th>Ingrédient</th>
@@ -141,15 +200,16 @@
             <tbody>
                 <tr>
                     <td><input type="text" id="ingredient1" placeholder="Ingrédient" value="Maigre"></td>
-                    <td><input type="number" id="quantite1" placeholder="Recette" value="1000"></td>
-                    <td><input type="number" id="conversion1" placeholder="Conversion" value=""></td>
+                    <td><input type="number" pattern="\d*" id="quantite1" placeholder="Recette" value="1000"></td>
+                    <td><input type="number" pattern="\d*" id="conversion1" placeholder="Conversion" value=""></td>
                     <!-- <td><button onclick="retirer('')">Retirer</button></td> --> <!-- pas de bouton pour retirer la premiere ligne -->
+                    <td></td>
                 </tr>
                 <tr>
                     <td><input type="text" id="ingredient2" placeholder="Ingrédient" value="Gras"></td>
-                    <td><input type="number" id="quantite2" oninput="calculer()" placeholder="Recette"></td>
+                    <td><input type="number" pattern="\d*" id="quantite2" oninput="calculer()" placeholder="Recette"></td>
                     <td><span id="conversion2" placeholder="Conversion"></span>
-                    <td><button class="btn rouge" onclick="retirer(2)">Retirer</button></td>
+                    <td><button class="btn rouge" onclick="retirer(2)">❌</button></td>
                 </tr>
             </tbody>
         </table>
@@ -165,7 +225,7 @@
         <h1>Calculer le % d'une valeur</h1>
         <div>
             <span>
-                <!--<button onclick="calculerpercent()">Calculer</button>--><input type="number" id="percent" placeholder="%"> % de <input type="number" id="valeur" placeholder="Valeur"> = <b id="resultat"></b>
+                <!--<button onclick="calculerpercent()">Calculer</button>--><input class="inpercent" type="number" pattern="\d*" id="percent" placeholder="", value="50"> % de <input  class="inpercent" pattern="\d*" type="number" id="valeur" placeholder="", value="1"> = <b id="resultat"></b>
             </span>
             
             
@@ -201,9 +261,9 @@
             ligne.insertCell(0).innerHTML = "<input type='text' id='ingredient" + tablelength + "' placeholder='Ingrédient'>";
             quantite = ligne.insertCell(1)
             quantite.oninput = calculer
-            quantite.innerHTML = "<input type='number' id='quantite" + tablelength + "' placeholder='Quantité'>";
+            quantite.innerHTML = `<input type='number' pattern='\\d*' id="quantite${tablelength}" placeholder='Recette'>`;
             ligne.insertCell(2).innerHTML = "<span id='conversion" + tablelength + "'></span>";
-            ligne.insertCell(3).innerHTML = `<button class="btn rouge" onclick="retirer(${tablelength})">Retirer</button>` // "<button class= onclick='retirer(" + tablelength + ")'>Retirer</button>";
+            ligne.insertCell(3).innerHTML = `<button class="btn rouge" onclick="retirer(${tablelength})">❌</button>` // "<button class= onclick='retirer(" + tablelength + ")'>Retirer</button>";
 
         })
 
@@ -239,6 +299,7 @@
 
         document.getElementById("valeur").addEventListener("change", calculerpercent);
         document.getElementById("valeur").oninput = calculerpercent;
+        calculerpercent()
     </script>
 
 

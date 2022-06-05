@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convertisseur de recette</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+        }
+        /* centre tout les element de la page */
+        body > div > * 
+        {
+            margin: 10px auto;
+            width: 90%;
+            padding: 10px;
+            max-width: 500px;
+        }
+        body > div {
+            border: 3px solid black;
+            max-width: 800px;
+            margin : 10px auto;
+            border-radius: 10px;
+        }
+        /* stylise l'entete de la table*/
+        thead tr{
+            background-color: #ccc;
+            text-align: center;
+            border-radius: 10px;
+            border: 10px solid black;
+        }
+        th, td {
+            padding: 10px;
+            border-spacing: 0px;
+            border-radius: 10px;
+        }
+        table {
+            border-spacing: 0px;
+        }
+        *{
+            transition: 0.2s;
+        }
+        tr:hover{
+            background-color: rgba(204, 204, 204, 0.5);
+            border-color: transparent;
+        }
+        /* stylise les titres h*/
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+        }
+        button{
+
+            display: inline-block;
+            outline: 0;
+            cursor: pointer;
+            padding: 5px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            vertical-align: middle;
+            border: 1px solid;
+            border-radius: 6px;
+            color: #ffffff;
+            background-color: #2ea44f;
+            border-color: #1b1f2326;
+            box-shadow: rgba(27, 31, 35, 0.04) 0px 1px 0px 0px, rgba(255, 255, 255, 0.25) 0px 1px 0px 0px inset;
+            transition: 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+            transition-property: color, background-color, border-color;        
+        }
+        button:hover {
+            background-color: #2c974b;
+            border-color: #1b1f2326;
+            transition-duration: 0.1s;
+        }
+        .btn.rouge {
+            background-color: #d80c0c;
+            color: #fff;
+        }
+        .btn.rouge:hover {
+            background-color: #830e0e;
+            border-color: #1b1f2326;
+            transition-duration: 0.1s;
+        }
+        /* centrer le button ajouter */
+        #ajouter{
+            display: block;
+            margin: 0 auto;
+            width: 50%;
+        }
+
+        #percentblock input[type="number"] {
+            width:50px;
+            -webkit-appearance: none;
+            -moz-appearance: textfield;
+        }
+
+        
+    </style>
+</head>
+
+<body>
+    <!-- Page pour creer dynaliquement et remplir un tableau de proportionalité pour convertir une recette-->
+    <div>
+        <h1>Conversion de recette</h1>
+        <table id="recette">
+            <thead>
+                <tr>
+                    <th>Ingrédient</th>
+                    <th>Quantité recette</th>
+                    <th>Conversion</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="text" id="ingredient1" placeholder="Ingrédient" value="Maigre"></td>
+                    <td><input type="number" id="quantite1" placeholder="Recette" value="1000"></td>
+                    <td><input type="number" id="conversion1" placeholder="Conversion" value=""></td>
+                    <!-- <td><button onclick="retirer('')">Retirer</button></td> --> <!-- pas de bouton pour retirer la premiere ligne -->
+                </tr>
+                <tr>
+                    <td><input type="text" id="ingredient2" placeholder="Ingrédient" value="Gras"></td>
+                    <td><input type="number" id="quantite2" oninput="calculer()" placeholder="Recette"></td>
+                    <td><span id="conversion2" placeholder="Conversion"></span>
+                    <td><button class="btn rouge" onclick="retirer(2)">Retirer</button></td>
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            <button id="ajouter">Ajouter un ingrédient</button>
+        </div>
+        <div>
+            <span>Coéficient de proportionalité : <b id="coef"></b></span>
+        </div>
+    </div>
+    <div id="percentblock">
+        <!-- calculer le % d'une valeur -->
+        <h1>Calculer le % d'une valeur</h1>
+        <div>
+            <span>
+                <!--<button onclick="calculerpercent()">Calculer</button>--><input type="number" id="percent" placeholder="%"> % de <input type="number" id="valeur" placeholder="Valeur"> = <b id="resultat"></b>
+            </span>
+            
+            
+            
+        </div>
+    </div>
+    <script>
+        let coef = 1; // coeficient de proportionnalité
+
+        // fonction qui calcule le coeficient de proportionnalité quand on chnange la valeur de quantite1 ou conversion1
+        function calculer(){
+            console.log("calculer");
+            const quantite1 = document.getElementById("quantite1").value;
+            const conversion1 = document.getElementById("conversion1").value;
+            coef = conversion1 / quantite1;
+            document.getElementById("coef").innerHTML = coef;
+            // calculer la conversion pour chaque ligne du tableau
+            const table = document.getElementById("recette");
+            const lignes = table.getElementsByTagName("tr");
+            for (let i = 2; i < lignes.length; i++) {
+                const quantite = document.getElementById("quantite" + i).value;
+                document.getElementById("conversion" + i).innerHTML = (quantite * coef).toFixed(3);
+            }
+        }
+    
+        // fonction qui permet d'ajouter un nouvel ingredient dans le tableau quand on clique sur le bouton ajouter
+        document.getElementById("ajouter").addEventListener("click", ()=>{
+            const table = document.getElementById("recette");
+            const ligne = table.insertRow(-1);
+            const tablelength = table.rows.length - 1
+            ligne.id = "ligne" + tablelength;
+            console.log(ligne)
+            ligne.insertCell(0).innerHTML = "<input type='text' id='ingredient" + tablelength + "' placeholder='Ingrédient'>";
+            quantite = ligne.insertCell(1)
+            quantite.oninput = calculer
+            quantite.innerHTML = "<input type='number' id='quantite" + tablelength + "' placeholder='Quantité'>";
+            ligne.insertCell(2).innerHTML = "<span id='conversion" + tablelength + "'></span>";
+            ligne.insertCell(3).innerHTML = `<button class="btn rouge" onclick="retirer(${tablelength})">Retirer</button>` // "<button class= onclick='retirer(" + tablelength + ")'>Retirer</button>";
+
+        })
+
+        // fonction retirer qui retire une ligne du tableau
+        function retirer(index){
+            const table = document.getElementById("recette");
+            table.deleteRow(index);
+        }
+
+        // listener sur conversion1
+        document.getElementById("conversion1").addEventListener("change", calculer);
+        document.getElementById("conversion1").oninput = calculer
+        // listener sur quantite1
+        document.getElementById("quantite1").addEventListener("change", calculer);
+        document.getElementById("quantite1").oninput = calculer
+        
+        calculer()
+
+
+    </script>
+
+    <script>
+        // fonction qui calcule le % d'une valeur
+        function calculerpercent(){
+            const percent = document.getElementById("percent").value;
+            const valeur = document.getElementById("valeur").value;
+            console.log(percent, valeur)
+            const resultat = (percent / 100) * valeur;
+            document.getElementById("resultat").innerHTML = resultat;
+        }
+        document.getElementById("percent").addEventListener("change", calculerpercent);
+        document.getElementById("percent").oninput = calculerpercent;
+
+        document.getElementById("valeur").addEventListener("change", calculerpercent);
+        document.getElementById("valeur").oninput = calculerpercent;
+    </script>
+
+
+</body>
+
+</html>
